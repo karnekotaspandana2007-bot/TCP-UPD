@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TCP/UDP Performance Analyzer & Traffic Shaping Lab</title>
+  <!-- Google Fonts for sleek typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">🌐</div>
+        <div>
+          <div class="logo-title">NetAnalyzer</div>
+          <div class="logo-sub">Computer Networks Lab</div>
+        </div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <div class="menu-category">Overview</div>
+        <li>
+          <a class="nav-item active" data-target="view-dashboard" id="nav-dashboard">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+
+        <div class="menu-category">Protocols & Sockets</div>
+        <li>
+          <a class="nav-item" data-target="view-tcp" id="nav-tcp">
+            <span class="nav-icon">🔵</span>
+            <span class="nav-text">TCP Communication</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-target="view-udp" id="nav-udp">
+            <span class="nav-icon">🟠</span>
+            <span class="nav-text">UDP Communication</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-target="view-comparison" id="nav-comparison">
+            <span class="nav-icon">⚖️</span>
+            <span class="nav-text">Performance Comparison</span>
+          </a>
+        </li>
+
+        <div class="menu-category">Traffic & Congestion</div>
+        <li>
+          <a class="nav-item" data-target="view-leaky-bucket" id="nav-leaky">
+            <span class="nav-icon">🪣</span>
+            <span class="nav-text">Leaky Bucket</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-target="view-token-bucket" id="nav-token">
+            <span class="nav-icon">🎟️</span>
+            <span class="nav-text">Token Bucket</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-target="view-congestion" id="nav-congestion">
+            <span class="nav-icon">📈</span>
+            <span class="nav-text">TCP Congestion Window</span>
+          </a>
+        </li>
+
+        <div class="menu-category">Records & Guide</div>
+        <li>
+          <a class="nav-item" data-target="view-history" id="nav-history">
+            <span class="nav-icon">📜</span>
+            <span class="nav-text">Experiment History</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-target="view-about" id="nav-about">
+            <span class="nav-icon">ℹ️</span>
+            <span class="nav-text">About & Viva Guide</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div>B.Tech CSE / Data Science Project</div>
+        <div style="color:var(--cyan-accent); margin-top:2px;">Python Sockets & Flask</div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <main class="main-wrapper">
+      <!-- Top Navigation Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 class="page-title" id="current-page-title">Dashboard</h1>
+        </div>
+
+        <div class="server-indicators">
+          <!-- TCP Server Pill -->
+          <div class="server-pill" id="pill-tcp-server">
+            <span class="status-dot" id="tcp-status-dot"></span>
+            <span id="tcp-status-text">TCP :5001</span>
+            <button class="btn-pill-toggle" id="tcp-toggle-btn">Start</button>
+          </div>
+
+          <!-- UDP Server Pill -->
+          <div class="server-pill" id="pill-udp-server">
+            <span class="status-dot" id="udp-status-dot"></span>
+            <span id="udp-status-text">UDP :5002</span>
+            <button class="btn-pill-toggle" id="udp-toggle-btn">Start</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <div class="content-body">
+
+        <!-- ==========================================================
+             1. DASHBOARD VIEW
+             ========================================================== -->
+        <section class="view-section active" id="view-dashboard">
+          <!-- Summary Cards (4 x 2) -->
+          <div class="grid-cards-4">
+            <div class="card stat-card">
+              <div class="stat-header">
+                <span>Total Experiments</span>
+                <span class="stat-icon">🧪</span>
+              </div>
+              <div class="stat-value" id="stat-total-experiments">0</div>
+              <div class="stat-subtext">Executed in session</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-header">
+                <span>Packets Sent</span>
+                <span class="stat-icon">📤</span>
+              </div>
+              <div class="stat-value" id="stat-total-sent">0</div>
+              <div class="stat-subtext">Application payload packets</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-header">
+                <span>Packets Received</span>
+                <span class="stat-icon">📥</span>
+              </div>
+              <div class="stat-value" id="stat-total-recv">0</div>
+              <div class="stat-subtext">Acknowledged unique packets</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-header">
+                <span>Packet Loss</span>
+                <span class="stat-icon">📉</span>
+              </div>
+              <div class="stat-value" id="stat-packet-loss">0.0%</div>
+              <div class="stat-subtext">Aggregate loss percentage</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-header">
+                <span>Average Latency</span>
+                <span class="stat-icon">⏱️</span>
+              </div>
+              <div class="stat-value" id="stat-avg-latency">0.0 ms</div>
+              <div class="stat-subtext">Measured round-trip time</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-header">
+                <span>Throughput</span>
+                <span class="stat-icon">⚡</span>
+              </div>
+              <div class="stat-value" id="stat-avg-throughput">0.0 Mbps</div>
+              <div class="stat-subtext">Payload transmission speed</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-header">
+                <span>Latest Protocol</span>
+                <span class="stat-icon">🔌</span>
+              </div>
+              <div class="stat-value" id="stat-latest-protocol" style="font-size:20px;">None</div>
+              <div class="stat-subtext">Most recent experiment</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-header">
+                <span>Latest Status</span>
+                <span class="stat-icon">🔔</span>
+              </div>
+              <div class="stat-value" id="stat-latest-status" style="font-size:20px;">IDLE</div>
+              <div class="stat-subtext">Experiment health</div>
+            </div>
+          </div>
+
+          <!-- Empty State when no experiments run yet -->
+          <div class="card empty-state" id="dashboard-empty-state">
+            <div class="empty-state-icon">📡</div>
+            <h3 class="empty-state-title">No Experiments Conducted Yet</h3>
+            <p class="empty-state-text">
+              Launch real TCP or UDP socket communication, or run traffic-shaping algorithm simulations to visualize live network metrics.
+            </p>
+            <div class="form-actions" style="justify-content:center;">
+              <button class="btn btn-primary" id="btn-dashboard-start-tcp">🔵 Launch TCP Experiment</button>
+              <button class="btn btn-secondary" id="btn-dashboard-start-udp">🟠 Launch UDP Experiment</button>
+            </div>
+          </div>
+
+          <!-- Dashboard Charts (Shown when experiments exist) -->
+          <div class="grid-cards-2 dashboard-chart-box" style="display:none;">
+            <div class="card">
+              <div class="card-title-bar">
+                <span class="card-title">⚡ Throughput Comparison</span>
+                <span class="card-badge">Measured Mbps</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="dashboardThroughputChart"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title-bar">
+                <span class="card-title">⏱️ Round-Trip Latency</span>
+                <span class="card-badge">Measured ms</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="dashboardLatencyChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             2. TCP COMMUNICATION VIEW
+             ========================================================== -->
+        <section class="view-section" id="view-tcp">
+          <div class="concept-box">
+            <h4>🔵 TCP (Transmission Control Protocol) Overview</h4>
+            TCP is a <strong>connection-oriented, reliable byte-stream protocol</strong>. It establishes a three-way handshake (SYN, SYN-ACK, ACK), guarantees in-order delivery, uses acknowledgements and sequence numbers, and implements flow control and congestion avoidance. Our client communicates with the server using <strong>length-prefixed framing</strong> to guarantee clean message boundaries over raw byte streams.
+          </div>
+
+          <!-- Configuration Form -->
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-title-bar">
+              <span class="card-title">⚙️ TCP Client Configuration</span>
+              <span class="card-badge">Socket Stream</span>
+            </div>
+
+            <form id="tcp-experiment-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Server Host</label>
+                  <input type="text" class="form-control" id="tcp-host" value="127.0.0.1" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Server Port</label>
+                  <input type="number" class="form-control" id="tcp-port" value="5001" min="1024" max="65535" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Number of Packets</label>
+                  <input type="number" class="form-control" id="tcp-packets" value="10" min="1" max="500" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Payload Size (Bytes)</label>
+                  <input type="number" class="form-control" id="tcp-size" value="1024" min="1" max="65536" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Interval Delay (ms)</label>
+                  <input type="number" class="form-control" id="tcp-interval" value="5" min="0" max="2000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Timeout (Seconds)</label>
+                  <input type="number" class="form-control" id="tcp-timeout" value="2.0" step="0.5" min="0.5" max="10.0">
+                </div>
+              </div>
+
+              <div class="progress-container" id="tcp-progress">
+                <div class="progress-bar" id="tcp-progress-bar"></div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-run-tcp">🚀 Start TCP Experiment</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- TCP Results Container -->
+          <div id="tcp-results-container" style="display:none;">
+            <!-- Metrics Cards -->
+            <div class="grid-cards-4">
+              <div class="card stat-card">
+                <div class="stat-header"><span>Packets Sent</span><span>📤</span></div>
+                <div class="stat-value" id="tcp-res-sent">0</div>
+                <div class="stat-subtext">Total generated</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Packets Acked</span><span>✅</span></div>
+                <div class="stat-value" id="tcp-res-recv">0</div>
+                <div class="stat-subtext">Confirmed by server</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Packet Loss</span><span>📉</span></div>
+                <div class="stat-value" id="tcp-res-loss">0.0%</div>
+                <div class="stat-subtext">Reliable delivery</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Delivery Ratio</span><span>🎯</span></div>
+                <div class="stat-value" id="tcp-res-delivery">100.0%</div>
+                <div class="stat-subtext">Delivery percentage</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Throughput</span><span>⚡</span></div>
+                <div class="stat-value" id="tcp-res-tp">0.0 Mbps</div>
+                <div class="stat-subtext">Useful payload rate</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Average RTT</span><span>⏱️</span></div>
+                <div class="stat-value" id="tcp-res-avg-rtt">0.0 ms</div>
+                <div class="stat-subtext">Mean round trip time</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Min / Max RTT</span><span>📊</span></div>
+                <div class="stat-value" id="tcp-res-min-max" style="font-size:18px;">0.0 / 0.0 ms</div>
+                <div class="stat-subtext">Latency spread</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Jitter</span><span>〰️</span></div>
+                <div class="stat-value" id="tcp-res-jitter">0.0 ms</div>
+                <div class="stat-subtext">RTT variation</div>
+              </div>
+            </div>
+
+            <!-- RTT Chart -->
+            <div class="card" style="margin-bottom:24px;">
+              <div class="card-title-bar">
+                <span class="card-title">📈 TCP Round-Trip Time per Packet Sequence</span>
+                <span class="card-badge">Milliseconds</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="tcpRttChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Packet Trace Table -->
+            <div class="card">
+              <div class="card-title-bar">
+                <span class="card-title">📋 Packet Transmission Log</span>
+                <span class="card-badge">Sequence Trace</span>
+              </div>
+              <div class="table-responsive" style="max-height:360px;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Seq #</th>
+                      <th>Payload Size</th>
+                      <th>Send Offset</th>
+                      <th>ACK Offset</th>
+                      <th>RTT Latency</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tcp-packets-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             3. UDP COMMUNICATION VIEW
+             ========================================================== -->
+        <section class="view-section" id="view-udp">
+          <div class="concept-box">
+            <h4>🟠 UDP (User Datagram Protocol) Overview</h4>
+            UDP is a <strong>connectionless, lightweight datagram protocol</strong>. There is no three-way handshake, no acknowledgements built into the transport layer, and no automatic retransmissions. Datagrams are transmitted independently with minimal header overhead (8 bytes vs 20+ bytes in TCP). For measurement, our application layer tracks sequence numbers and simulates lost packets via timeouts.
+          </div>
+
+          <!-- Configuration Form -->
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-title-bar">
+              <span class="card-title">⚙️ UDP Client Configuration</span>
+              <span class="card-badge">Datagram Sockets</span>
+            </div>
+
+            <form id="udp-experiment-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Server Host</label>
+                  <input type="text" class="form-control" id="udp-host" value="127.0.0.1" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Server Port</label>
+                  <input type="number" class="form-control" id="udp-port" value="5002" min="1024" max="65535" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Number of Packets</label>
+                  <input type="number" class="form-control" id="udp-packets" value="10" min="1" max="500" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Payload Size (Bytes)</label>
+                  <input type="number" class="form-control" id="udp-size" value="1024" min="1" max="65507" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Interval Delay (ms)</label>
+                  <input type="number" class="form-control" id="udp-interval" value="5" min="0" max="2000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Socket Timeout (Seconds)</label>
+                  <input type="number" class="form-control" id="udp-timeout" value="0.5" step="0.1" min="0.1" max="5.0">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Educational Simulated Loss</label>
+                  <select class="form-control" id="udp-sim-loss">
+                    <option value="0.0">0% (Normal Network)</option>
+                    <option value="0.1">10% Packet Drop Rate</option>
+                    <option value="0.25">25% Packet Drop Rate</option>
+                    <option value="0.5">50% High Loss Network</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="progress-container" id="udp-progress">
+                <div class="progress-bar" id="udp-progress-bar"></div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-run-udp">🚀 Start UDP Experiment</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- UDP Results Container -->
+          <div id="udp-results-container" style="display:none;">
+            <!-- Metrics Cards -->
+            <div class="grid-cards-4">
+              <div class="card stat-card">
+                <div class="stat-header"><span>Packets Sent</span><span>📤</span></div>
+                <div class="stat-value" id="udp-res-sent">0</div>
+                <div class="stat-subtext">Total transmitted</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Unique Received</span><span>✅</span></div>
+                <div class="stat-value" id="udp-res-recv">0</div>
+                <div class="stat-subtext">ACKed by server</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Packet Loss</span><span>📉</span></div>
+                <div class="stat-value" id="udp-res-loss">0.0%</div>
+                <div class="stat-subtext">Timed out / dropped</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Delivery Ratio</span><span>🎯</span></div>
+                <div class="stat-value" id="udp-res-delivery">100.0%</div>
+                <div class="stat-subtext">Delivery percentage</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Throughput</span><span>⚡</span></div>
+                <div class="stat-value" id="udp-res-tp">0.0 Mbps</div>
+                <div class="stat-subtext">Effective throughput</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Average RTT</span><span>⏱️</span></div>
+                <div class="stat-value" id="udp-res-avg-rtt">0.0 ms</div>
+                <div class="stat-subtext">Delivered packets only</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Min / Max RTT</span><span>📊</span></div>
+                <div class="stat-value" id="udp-res-min-max" style="font-size:18px;">0.0 / 0.0 ms</div>
+                <div class="stat-subtext">Latency spread</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Missing Sequences</span><span>⚠️</span></div>
+                <div class="stat-value" id="udp-res-missing" style="font-size:16px;">None</div>
+                <div class="stat-subtext">Lost packet IDs</div>
+              </div>
+            </div>
+
+            <!-- RTT Chart -->
+            <div class="card" style="margin-bottom:24px;">
+              <div class="card-title-bar">
+                <span class="card-title">📈 UDP Round-Trip Latency per Datagram</span>
+                <span class="card-badge">Milliseconds</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="udpRttChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Packet Trace Table -->
+            <div class="card">
+              <div class="card-title-bar">
+                <span class="card-title">📋 Datagram Transmission Log</span>
+                <span class="card-badge">Datagram Trace</span>
+              </div>
+              <div class="table-responsive" style="max-height:360px;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Seq #</th>
+                      <th>Payload Size</th>
+                      <th>Send Offset</th>
+                      <th>ACK Offset</th>
+                      <th>RTT Latency</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="udp-packets-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             4. PERFORMANCE COMPARISON VIEW
+             ========================================================== -->
+        <section class="view-section" id="view-comparison">
+          <div class="concept-box">
+            <h4>⚖️ Direct Protocol Benchmarking</h4>
+            Run both <strong>TCP</strong> and <strong>UDP</strong> concurrently with exactly matching packet counts, payload sizes, and transmission intervals. This gives an empirical baseline to compare transmission overhead, round-trip time differences, and delivery guarantees under identical local conditions.
+          </div>
+
+          <!-- Comparison Config -->
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-title-bar">
+              <span class="card-title">⚙️ Benchmark Configuration</span>
+              <span class="card-badge">Controlled Comparison</span>
+            </div>
+            <form id="comparison-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Number of Packets</label>
+                  <input type="number" class="form-control" id="comp-packets" value="20" min="5" max="300" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Payload Size (Bytes)</label>
+                  <input type="number" class="form-control" id="comp-size" value="1024" min="64" max="32768" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Inter-packet Interval (ms)</label>
+                  <input type="number" class="form-control" id="comp-interval" value="2" min="0" max="500">
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-run-comparison">⚖️ Run Direct Side-by-Side Comparison</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="comparison-results-container" style="display:none;">
+            <!-- Comparison Table -->
+            <div class="card" style="margin-bottom:24px;">
+              <div class="card-title-bar">
+                <span class="card-title">📊 Side-by-Side Performance Comparison</span>
+                <span class="card-badge">Direct Metrics</span>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Protocol</th>
+                      <th>Sent</th>
+                      <th>Received</th>
+                      <th>Loss %</th>
+                      <th>Avg Latency</th>
+                      <th>Min RTT</th>
+                      <th>Max RTT</th>
+                      <th>Throughput</th>
+                      <th>Duration</th>
+                      <th>Delivery Ratio</th>
+                    </tr>
+                  </thead>
+                  <tbody id="comparison-table-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Comparison Chart -->
+            <div class="card" style="margin-bottom:24px;">
+              <div class="card-title-bar">
+                <span class="card-title">📈 Metric Visualizations</span>
+                <span class="card-badge">Chart.js</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="comparisonThroughputChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical Comparison Reference Card -->
+          <div class="card">
+            <div class="card-title-bar">
+              <span class="card-title">📖 Architectural Comparison: TCP vs UDP</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Characteristic</th>
+                    <th>TCP (Transmission Control Protocol)</th>
+                    <th>UDP (User Datagram Protocol)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Connection Type</strong></td>
+                    <td>Connection-oriented (Requires 3-way Handshake)</td>
+                    <td>Connectionless (No handshake)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Reliability</strong></td>
+                    <td>Guaranteed (Retransmission, Cumulative ACKs)</td>
+                    <td>Best-effort (No retransmissions, packets may drop)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ordering</strong></td>
+                    <td>Strictly ordered (Sequence numbers reorder bytes)</td>
+                    <td>Unordered (Datagrams may arrive in any order)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Data Boundary</strong></td>
+                    <td>Continuous byte-stream (Requires application framing)</td>
+                    <td>Preserves message/datagram boundaries</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Header Overhead</strong></td>
+                    <td>20 to 60 bytes</td>
+                    <td>Fixed 8 bytes</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Flow & Congestion Control</strong></td>
+                    <td>Yes (Sliding window, cwnd, ssthresh, backoff)</td>
+                    <td>None (Transmits at application rate)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Common Use Cases</strong></td>
+                    <td>HTTP/HTTPS, FTP, SSH, Database transactions</td>
+                    <td>DNS, VoIP, Live Video Streaming, Online Gaming</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             5. LEAKY BUCKET ALGORITHM VIEW
+             ========================================================== -->
+        <section class="view-section" id="view-leaky-bucket">
+          <div class="concept-box">
+            <h4>🪣 Leaky Bucket Algorithm</h4>
+            The <strong>Leaky Bucket algorithm</strong> shapes bursty network traffic into a constant, uniform output flow. It models a bucket with a small hole in the bottom. Incoming packets enter a finite buffer (the bucket). Regardless of how fast or irregularly packets arrive, they leak out at a fixed rate. If incoming bursts exceed the bucket capacity, excess packets overflow and are dropped.
+          </div>
+
+          <!-- Configuration Form -->
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-title-bar">
+              <span class="card-title">⚙️ Leaky Bucket Parameters</span>
+              <span class="card-badge">Traffic Shaping</span>
+            </div>
+            <form id="leaky-bucket-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Bucket Capacity (Packets)</label>
+                  <input type="number" class="form-control" id="leaky-capacity" value="10" min="1" max="100" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Leak / Output Rate (Packets/Slot)</label>
+                  <input type="number" class="form-control" id="leaky-leak-rate" value="3" min="1" max="50" required>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">Arrival Pattern (Packets per time step, comma-separated)</label>
+                  <input type="text" class="form-control" id="leaky-arrivals" value="4, 8, 2, 0, 10, 1, 5, 0" required>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-run-leaky">🚀 Run Simulation</button>
+                <button type="button" class="btn btn-secondary" id="btn-reset-leaky">🔄 Reset</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Results -->
+          <div id="leaky-results-container" style="display:none;">
+            <!-- Summary Stats -->
+            <div class="grid-cards-3">
+              <div class="card stat-card">
+                <div class="stat-header"><span>Total Incoming</span><span>📥</span></div>
+                <div class="stat-value" id="leaky-res-incoming">0</div>
+                <div class="stat-subtext">Offered traffic</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Total Transmitted</span><span>📤</span></div>
+                <div class="stat-value" id="leaky-res-transmitted">0</div>
+                <div class="stat-subtext">Smoothed output</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Total Dropped</span><span>❌</span></div>
+                <div class="stat-value" id="leaky-res-dropped">0</div>
+                <div class="stat-subtext">Buffer overflows</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Packet Loss %</span><span>📉</span></div>
+                <div class="stat-value" id="leaky-res-loss">0.0%</div>
+                <div class="stat-subtext">Drop percentage</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Max Queue Depth</span><span>🪣</span></div>
+                <div class="stat-value" id="leaky-res-max-queue">0 / 10</div>
+                <div class="stat-subtext">Peak buffer used</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Avg Buffer Utilization</span><span>📊</span></div>
+                <div class="stat-value" id="leaky-res-util">0.0%</div>
+                <div class="stat-subtext">Buffer occupancy</div>
+              </div>
+            </div>
+
+            <!-- Visualization -->
+            <div class="card" style="margin-bottom:24px;">
+              <div class="card-title-bar">
+                <span class="card-title">📈 Leaky Bucket Dynamic Flow Chart</span>
+                <span class="card-badge">Packets vs Time Slot</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="leakyBucketChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Step by Step Table -->
+            <div class="card">
+              <div class="card-title-bar">
+                <span class="card-title">📋 Step-by-Step Simulation Trace</span>
+                <span class="card-badge">Discrete Time</span>
+              </div>
+              <div class="table-responsive" style="max-height:360px;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Time Step</th>
+                      <th>Incoming</th>
+                      <th>Accepted</th>
+                      <th>Dropped</th>
+                      <th>Transmitted</th>
+                      <th>Queue Size</th>
+                      <th>Utilization %</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leaky-steps-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             6. TOKEN BUCKET ALGORITHM VIEW
+             ========================================================== -->
+        <section class="view-section" id="view-token-bucket">
+          <div class="concept-box">
+            <h4>🎟️ Token Bucket Algorithm</h4>
+            The <strong>Token Bucket algorithm</strong> allows controlled bursts of traffic while enforcing an average rate limit. Tokens accumulate in a bucket of fixed capacity at a steady rate. A packet can transmit only if sufficient tokens are present in the bucket. Unlike Leaky Bucket (which forces a strictly uniform rate), Token Bucket allows instantaneous bursts if tokens have accumulated during idle periods.
+          </div>
+
+          <!-- Configuration Form -->
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-title-bar">
+              <span class="card-title">⚙️ Token Bucket Parameters</span>
+              <span class="card-badge">Burst-Tolerant Shaping</span>
+            </div>
+            <form id="token-bucket-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Bucket Capacity (Tokens)</label>
+                  <input type="number" class="form-control" id="token-capacity" value="10" min="1" max="100" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Token Generation Rate (Tokens/Slot)</label>
+                  <input type="number" class="form-control" id="token-rate" value="3" min="1" max="50" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Waiting Queue Capacity</label>
+                  <input type="number" class="form-control" id="token-queue-cap" value="10" min="0" max="100">
+                </div>
+                <div class="form-group" style="display:flex; justify-content:center; align-items:flex-start; padding-top:24px;">
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                    <input type="checkbox" id="token-allow-queue" checked>
+                    <span>Enable Packet Queueing</span>
+                  </label>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">Arrival Pattern (Packets per time step, comma-separated)</label>
+                  <input type="text" class="form-control" id="token-arrivals" value="4, 8, 2, 0, 10, 1, 5, 0" required>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-run-token">🚀 Run Simulation</button>
+                <button type="button" class="btn btn-secondary" id="btn-reset-token">🔄 Reset</button>
+                <button type="button" class="btn btn-secondary" id="btn-compare-shaping">⚖️ Compare Directly with Leaky Bucket</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Results -->
+          <div id="token-results-container" style="display:none;">
+            <!-- Summary Stats -->
+            <div class="grid-cards-3">
+              <div class="card stat-card">
+                <div class="stat-header"><span>Total Incoming</span><span>📥</span></div>
+                <div class="stat-value" id="token-res-incoming">0</div>
+                <div class="stat-subtext">Total packets offered</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Total Transmitted</span><span>📤</span></div>
+                <div class="stat-value" id="token-res-transmitted">0</div>
+                <div class="stat-subtext">Packets dispatched</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Total Dropped</span><span>❌</span></div>
+                <div class="stat-value" id="token-res-dropped">0</div>
+                <div class="stat-subtext">Due to queue overflow</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Packet Loss %</span><span>📉</span></div>
+                <div class="stat-value" id="token-res-loss">0.0%</div>
+                <div class="stat-subtext">Loss percentage</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Burst Events</span><span>💥</span></div>
+                <div class="stat-value" id="token-res-bursts">0</div>
+                <div class="stat-subtext">Steps transmitting > rate</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Peak Burst Size</span><span>⚡</span></div>
+                <div class="stat-value" id="token-res-peak-burst">0 pkts</div>
+                <div class="stat-subtext">Maximum burst in 1 slot</div>
+              </div>
+            </div>
+
+            <!-- Visualization -->
+            <div class="card" style="margin-bottom:24px;">
+              <div class="card-title-bar">
+                <span class="card-title">📈 Token Bucket Burst & Token Availability Chart</span>
+                <span class="card-badge">Packets & Tokens</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="tokenBucketChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Step by Step Table -->
+            <div class="card">
+              <div class="card-title-bar">
+                <span class="card-title">📋 Step-by-Step Simulation Trace</span>
+                <span class="card-badge">Discrete Time</span>
+              </div>
+              <div class="table-responsive" style="max-height:360px;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Time Step</th>
+                      <th>Incoming</th>
+                      <th>Tokens Avail</th>
+                      <th>Transmitted</th>
+                      <th>Tokens Used</th>
+                      <th>Tokens Left</th>
+                      <th>Queue Size</th>
+                      <th>Dropped</th>
+                    </tr>
+                  </thead>
+                  <tbody id="token-steps-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             7. TCP CONGESTION WINDOW VIEW
+             ========================================================== -->
+        <section class="view-section" id="view-congestion">
+          <div class="concept-box">
+            <h4>📈 Educational TCP Congestion Control Simulator</h4>
+            <strong>Note:</strong> This is a visual simulation of the <strong>TCP Reno/Tahoe congestion control model</strong>, demonstrating how the sender dynamically estimates network capacity via <code>cwnd</code> (Congestion Window) and <code>ssthresh</code> (Slow-Start Threshold) without probing the OS kernel directly.
+            <ul style="margin: 8px 0 0 20px;">
+              <li><strong>Slow Start:</strong> Exponential growth (doubles each RTT) until <code>cwnd == ssthresh</code>.</li>
+              <li><strong>Congestion Avoidance:</strong> Additive Increase (linear growth, +1 MSS per RTT) to gently probe link bandwidth.</li>
+              <li><strong>Timeout Event:</strong> Severe loss! <code>ssthresh</code> is halved, and <code>cwnd</code> collapses back to 1 MSS.</li>
+              <li><strong>Fast Retransmit & Recovery (3 Dup ACKs):</strong> Moderate loss! <code>cwnd</code> is halved without dropping to 1, continuing directly into Congestion Avoidance.</li>
+            </ul>
+          </div>
+
+          <!-- Configuration Form -->
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-title-bar">
+              <span class="card-title">⚙️ Congestion Control Parameters</span>
+              <span class="card-badge">TCP Reno Dynamics</span>
+            </div>
+            <form id="congestion-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">MSS (Bytes)</label>
+                  <input type="number" class="form-control" id="cong-mss" value="1460" min="536" max="9000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Initial cwnd (MSS)</label>
+                  <input type="number" class="form-control" id="cong-init-cwnd" value="1" min="1" max="10">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Initial ssthresh (MSS)</label>
+                  <input type="number" class="form-control" id="cong-init-ssthresh" value="16" min="2" max="64">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Total RTT Rounds</label>
+                  <input type="number" class="form-control" id="cong-rounds" value="25" min="10" max="60">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Timeout Event Rounds (e.g. 12)</label>
+                  <input type="text" class="form-control" id="cong-timeout-rounds" value="12">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">3 Dup ACK Rounds (e.g. 20)</label>
+                  <input type="text" class="form-control" id="cong-dup-ack-rounds" value="20">
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-run-congestion">🚀 Run Simulation</button>
+                <button type="button" class="btn btn-secondary" id="btn-preset-standard">Standard Reno Scenario</button>
+                <button type="button" class="btn btn-secondary" id="btn-preset-heavy-loss">Severe Loss Scenario</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Results -->
+          <div id="congestion-results-container" style="display:none;">
+            <!-- Summary Stats -->
+            <div class="grid-cards-3">
+              <div class="card stat-card">
+                <div class="stat-header"><span>Peak cwnd</span><span>🚀</span></div>
+                <div class="stat-value" id="cong-res-max-cwnd">0 MSS</div>
+                <div class="stat-subtext">Maximum window attained</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Final cwnd</span><span>🏁</span></div>
+                <div class="stat-value" id="cong-res-final-cwnd">0 MSS</div>
+                <div class="stat-subtext">Ending window size</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Final ssthresh</span><span>🎯</span></div>
+                <div class="stat-value" id="cong-res-final-thresh">0 MSS</div>
+                <div class="stat-subtext">Slow start threshold</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Ending Phase</span><span>🔄</span></div>
+                <div class="stat-value" id="cong-res-phase" style="font-size:18px;">Slow Start</div>
+                <div class="stat-subtext">Active state</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-header"><span>Total Events</span><span>⚠️</span></div>
+                <div class="stat-value" id="cong-res-events-count">0</div>
+                <div class="stat-subtext">Timeouts + Fast Recoveries</div>
+              </div>
+            </div>
+
+            <!-- Congestion Window Chart -->
+            <div class="card" style="margin-bottom:24px;">
+              <div class="card-title-bar">
+                <span class="card-title">📈 cwnd & ssthresh Progression Curve</span>
+                <span class="card-badge">MSS vs RTT Round</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="congestionChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Round Table -->
+            <div class="card">
+              <div class="card-title-bar">
+                <span class="card-title">📋 RTT Progression & Phase Transition Log</span>
+                <span class="card-badge">Detailed Trace</span>
+              </div>
+              <div class="table-responsive" style="max-height:360px;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Round</th>
+                      <th>RTT Offset</th>
+                      <th>cwnd (MSS / Bytes)</th>
+                      <th>ssthresh</th>
+                      <th>Phase</th>
+                      <th>Event & State Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cong-rounds-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             8. EXPERIMENT HISTORY VIEW
+             ========================================================== -->
+        <section class="view-section" id="view-history">
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-title-bar">
+              <span class="card-title">📜 Experiment Run History</span>
+              <div style="display:flex; gap:8px;">
+                <button class="btn btn-secondary btn-sm" id="btn-export-csv">📥 Export as CSV</button>
+                <button class="btn btn-danger btn-sm" id="btn-clear-history">🗑️ Clear History</button>
+              </div>
+            </div>
+
+            <div class="card empty-state" id="history-empty-state" style="display:none;">
+              <div class="empty-state-icon">📂</div>
+              <h3 class="empty-state-title">No History Records Found</h3>
+              <p class="empty-state-text">Conduct real socket experiments or run algorithm simulations to populate history.</p>
+            </div>
+
+            <div class="table-responsive" id="history-table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Experiment ID</th>
+                    <th>Date & Time</th>
+                    <th>Type</th>
+                    <th>Sent</th>
+                    <th>Received</th>
+                    <th>Loss %</th>
+                    <th>Avg Latency</th>
+                    <th>Throughput</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             9. ABOUT & COLLEGE VIVA GUIDE VIEW
+             ========================================================== -->
+        <section class="view-section" id="view-about">
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-title-bar">
+              <span class="card-title">🎓 College Demonstration & Viva Voce Guide</span>
+              <span class="card-badge">B.Tech CN Practical</span>
+            </div>
+
+            <h3 style="color:#ffffff; margin-bottom:10px;">1. Project Objectives</h3>
+            <p style="color:var(--text-muted); margin-bottom:16px;">
+              This system provides an end-to-end framework for analyzing Transport Layer protocols and Network Layer traffic-shaping algorithms. It pairs real operating system Python socket communication (over TCP and UDP) with mathematical performance calculations, traffic policing simulations (Leaky Bucket, Token Bucket), and visual congestion control modeling.
+            </p>
+
+            <h3 style="color:#ffffff; margin-bottom:10px;">2. Performance Metrics & Mathematical Formulas</h3>
+            
+            <div class="formula-card">
+              Throughput (Mbps) = (Successfully Received Payload Bytes × 8) / Elapsed Seconds / 1,000,000
+            </div>
+            <p style="color:var(--text-muted); font-size:12px; margin-bottom:12px;">
+              <em>Note:</em> Calculates strictly application-layer useful payload data throughput (goodput), excluding framing overhead.
+            </p>
+
+            <div class="formula-card">
+              Packet Loss (%) = ((Sent Packets − Received Unique Packets) / Sent Packets) × 100
+            </div>
+
+            <div class="formula-card">
+              Delivery Ratio (%) = (Received Unique Packets / Sent Packets) × 100
+            </div>
+
+            <div class="formula-card">
+              Average RTT = Σ (Valid Round-Trip Times) / Number of Valid Measurements
+            </div>
+
+            <h3 style="color:#ffffff; margin:20px 0 10px;">3. Frequently Asked Examiner Viva Questions</h3>
+
+            <div class="concept-box">
+              <h4>Q1: Why does TCP require message framing while UDP does not?</h4>
+              <strong>Answer:</strong> TCP is a stream-oriented protocol with no concept of message boundaries; data sent in multiple <code>send()</code> calls may arrive combined in a single <code>recv()</code> call (or fragmented). Therefore, an application-layer framing mechanism (such as our 4-byte length prefix) is required. Conversely, UDP is datagram-oriented where each <code>sendto()</code> maps to an intact datagram up to MTU/buffer size.
+            </div>
+
+            <div class="concept-box">
+              <h4>Q2: What is the fundamental difference between Leaky Bucket and Token Bucket?</h4>
+              <strong>Answer:</strong> Leaky Bucket enforces a <em>strictly constant, uniform output rate</em> regardless of burstiness, which can increase latency for bursty traffic. Token Bucket allows <em>instantaneous bursts</em> up to bucket capacity if tokens have accumulated during previous idle periods, while still bounding the long-term average rate to the token generation rate.
+            </div>
+
+            <div class="concept-box">
+              <h4>Q3: Why does TCP Congestion Window grow exponentially during Slow Start?</h4>
+              <strong>Answer:</strong> In Slow Start, for every acknowledged packet, the sender increases <code>cwnd</code> by 1 MSS. Since an entire window of packets is acknowledged per RTT, the window doubles every RTT ($2^n$ growth), rapidly ramping up to utilize available network capacity until hitting <code>ssthresh</code>.
+            </div>
+
+            <div class="concept-box">
+              <h4>Q4: Why does Fast Recovery cut cwnd in half instead of dropping to 1 MSS?</h4>
+              <strong>Answer:</strong> Receiving 3 duplicate ACKs proves that packets are still reaching the receiver (the "ACK clock" is still ticking), indicating mild packet loss rather than total network collapse. Resetting to 1 MSS would needlessly cripple throughput, so Reno halves <code>cwnd</code> and resumes linear Congestion Avoidance.
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Global Modal for Details & Confirmations -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Details</h3>
+        <button class="btn-close-modal" id="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('modal-backdrop').classList.remove('open')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
