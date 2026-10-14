@@ -1,0 +1,1295 @@
+[
+  {
+    "id": "EXP-20261014-173048-41DF47",
+    "timestamp": "2026-10-14T17:30:48.102608",
+    "readable_time": "2026-10-14 17:30:48",
+    "type": "TCP",
+    "category": "REAL_NETWORK",
+    "config": {
+      "host": "127.0.0.1",
+      "port": 5001,
+      "packet_count": 10,
+      "payload_size": 1024,
+      "interval_ms": 5.0,
+      "timeout_sec": 2.0
+    },
+    "metrics": {
+      "sent_packets": 10,
+      "received_packets": 10,
+      "received_unique_packets": 10,
+      "missing_seqs": [],
+      "duplicate_count": 0,
+      "payload_bytes_received": 10240,
+      "elapsed_seconds": 0.0572,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0,
+      "throughput_mbps": 1.432,
+      "avg_rtt_ms": 0.402,
+      "min_rtt_ms": 0.211,
+      "max_rtt_ms": 1.58,
+      "jitter_ms": 0.418,
+      "sample_count": 10
+    },
+    "status": "SUCCESS",
+    "details": {
+      "packets_preview": [
+        {
+          "seq": 1,
+          "size_bytes": 1024,
+          "sent_time": 0.0005,
+          "ack_time": 0.0021,
+          "rtt_ms": 1.58,
+          "status": "ACKED"
+        },
+        {
+          "seq": 2,
+          "size_bytes": 1024,
+          "sent_time": 0.008,
+          "ack_time": 0.0082,
+          "rtt_ms": 0.243,
+          "status": "ACKED"
+        },
+        {
+          "seq": 3,
+          "size_bytes": 1024,
+          "sent_time": 0.014,
+          "ack_time": 0.0143,
+          "rtt_ms": 0.243,
+          "status": "ACKED"
+        },
+        {
+          "seq": 4,
+          "size_bytes": 1024,
+          "sent_time": 0.02,
+          "ack_time": 0.0203,
+          "rtt_ms": 0.25,
+          "status": "ACKED"
+        },
+        {
+          "seq": 5,
+          "size_bytes": 1024,
+          "sent_time": 0.0267,
+          "ack_time": 0.0271,
+          "rtt_ms": 0.414,
+          "status": "ACKED"
+        },
+        {
+          "seq": 6,
+          "size_bytes": 1024,
+          "sent_time": 0.033,
+          "ack_time": 0.0332,
+          "rtt_ms": 0.212,
+          "status": "ACKED"
+        },
+        {
+          "seq": 7,
+          "size_bytes": 1024,
+          "sent_time": 0.039,
+          "ack_time": 0.0393,
+          "rtt_ms": 0.302,
+          "status": "ACKED"
+        },
+        {
+          "seq": 8,
+          "size_bytes": 1024,
+          "sent_time": 0.0451,
+          "ack_time": 0.0454,
+          "rtt_ms": 0.295,
+          "status": "ACKED"
+        },
+        {
+          "seq": 9,
+          "size_bytes": 1024,
+          "sent_time": 0.051,
+          "ack_time": 0.0513,
+          "rtt_ms": 0.266,
+          "status": "ACKED"
+        },
+        {
+          "seq": 10,
+          "size_bytes": 1024,
+          "sent_time": 0.057,
+          "ack_time": 0.0572,
+          "rtt_ms": 0.211,
+          "status": "ACKED"
+        }
+      ],
+      "notes": "TCP provides reliable, ordered transmission via operating system acknowledgment and flow control. All packets delivered are confirmed by the application-level server ACK."
+    }
+  },
+  {
+    "id": "EXP-20261014-173017-BFAD5E",
+    "timestamp": "2026-10-14T17:30:17.561400",
+    "readable_time": "2026-10-14 17:30:17",
+    "type": "LEAKY_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 10,
+      "leak_rate": 3,
+      "arrivals": [
+        4,
+        8,
+        2,
+        0,
+        10,
+        1,
+        5,
+        0
+      ]
+    },
+    "metrics": {
+      "sent_packets": 30,
+      "received_packets": 28,
+      "received_unique_packets": 28,
+      "packet_loss_pct": 6.67,
+      "delivery_ratio_pct": 93.33
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 30,
+      "total_transmitted": 28,
+      "total_dropped": 2,
+      "max_queue_reached": 10,
+      "loss_percentage": 6.67,
+      "delivery_percentage": 93.33,
+      "avg_queue_utilization_pct": 38.0
+    }
+  },
+  {
+    "id": "EXP-20261014-172507-BBC85E",
+    "timestamp": "2026-10-14T17:25:07.757399",
+    "readable_time": "2026-10-14 17:25:07",
+    "type": "TOKEN_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 10,
+      "token_rate": 3,
+      "queue_capacity": 5,
+      "allow_queueing": true,
+      "arrivals": [
+        5,
+        2,
+        8
+      ]
+    },
+    "metrics": {
+      "sent_packets": 15,
+      "received_packets": 12,
+      "received_unique_packets": 12,
+      "packet_loss_pct": 20.0,
+      "delivery_ratio_pct": 80.0
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 15,
+      "total_transmitted": 12,
+      "total_dropped": 3,
+      "burst_events": 2,
+      "max_burst_size": 5,
+      "loss_percentage": 20.0,
+      "delivery_percentage": 80.0,
+      "avg_tokens_remaining": 5.0
+    }
+  },
+  {
+    "id": "EXP-20261014-172507-216637",
+    "timestamp": "2026-10-14T17:25:07.736769",
+    "readable_time": "2026-10-14 17:25:07",
+    "type": "UDP",
+    "category": "REAL_NETWORK",
+    "config": {
+      "host": "127.0.0.1",
+      "port": 5002,
+      "packet_count": 3,
+      "payload_size": 128,
+      "interval_ms": 2.0,
+      "timeout_sec": 1.0
+    },
+    "metrics": {
+      "sent_packets": 3,
+      "received_packets": 3,
+      "received_unique_packets": 3,
+      "missing_seqs": [],
+      "duplicate_count": 0,
+      "payload_bytes_received": 384,
+      "elapsed_seconds": 0.0063,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0,
+      "throughput_mbps": 0.4849,
+      "avg_rtt_ms": 0.431,
+      "min_rtt_ms": 0.29,
+      "max_rtt_ms": 0.616,
+      "jitter_ms": 0.167,
+      "sample_count": 3
+    },
+    "status": "SUCCESS",
+    "details": {
+      "packets_preview": [
+        {
+          "seq": 1,
+          "size_bytes": 128,
+          "sent_time": 0.0,
+          "ack_time": 0.0004,
+          "rtt_ms": 0.387,
+          "status": "ACKED"
+        },
+        {
+          "seq": 2,
+          "size_bytes": 128,
+          "sent_time": 0.003,
+          "ack_time": 0.0036,
+          "rtt_ms": 0.616,
+          "status": "ACKED"
+        },
+        {
+          "seq": 3,
+          "size_bytes": 128,
+          "sent_time": 0.006,
+          "ack_time": 0.0063,
+          "rtt_ms": 0.29,
+          "status": "ACKED"
+        }
+      ],
+      "notes": "UDP is a connectionless, best-effort transport protocol. It does not perform automatic retransmission or handshaking. Missing packets timed out waiting for server ACK."
+    }
+  },
+  {
+    "id": "EXP-20261014-172507-98CAC7",
+    "timestamp": "2026-10-14T17:25:07.708612",
+    "readable_time": "2026-10-14 17:25:07",
+    "type": "TCP",
+    "category": "REAL_NETWORK",
+    "config": {
+      "host": "127.0.0.1",
+      "port": 5001,
+      "packet_count": 3,
+      "payload_size": 128,
+      "interval_ms": 2.0,
+      "timeout_sec": 2.0
+    },
+    "metrics": {
+      "sent_packets": 3,
+      "received_packets": 3,
+      "received_unique_packets": 3,
+      "missing_seqs": [],
+      "duplicate_count": 0,
+      "payload_bytes_received": 384,
+      "elapsed_seconds": 0.0063,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0,
+      "throughput_mbps": 0.4887,
+      "avg_rtt_ms": 0.329,
+      "min_rtt_ms": 0.203,
+      "max_rtt_ms": 0.531,
+      "jitter_ms": 0.177,
+      "sample_count": 3
+    },
+    "status": "SUCCESS",
+    "details": {
+      "packets_preview": [
+        {
+          "seq": 1,
+          "size_bytes": 128,
+          "sent_time": 0.0004,
+          "ack_time": 0.0009,
+          "rtt_ms": 0.531,
+          "status": "ACKED"
+        },
+        {
+          "seq": 2,
+          "size_bytes": 128,
+          "sent_time": 0.0033,
+          "ack_time": 0.0035,
+          "rtt_ms": 0.203,
+          "status": "ACKED"
+        },
+        {
+          "seq": 3,
+          "size_bytes": 128,
+          "sent_time": 0.006,
+          "ack_time": 0.0062,
+          "rtt_ms": 0.253,
+          "status": "ACKED"
+        }
+      ],
+      "notes": "TCP provides reliable, ordered transmission via operating system acknowledgment and flow control. All packets delivered are confirmed by the application-level server ACK."
+    }
+  },
+  {
+    "id": "EXP-20261014-172507-DEB248",
+    "timestamp": "2026-10-14T17:25:07.677895",
+    "readable_time": "2026-10-14 17:25:07",
+    "type": "LEAKY_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 8,
+      "leak_rate": 2,
+      "arrivals": [
+        4,
+        6,
+        2
+      ]
+    },
+    "metrics": {
+      "sent_packets": 12,
+      "received_packets": 12,
+      "received_unique_packets": 12,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 12,
+      "total_transmitted": 12,
+      "total_dropped": 0,
+      "max_queue_reached": 8,
+      "loss_percentage": 0.0,
+      "delivery_percentage": 100.0,
+      "avg_queue_utilization_pct": 41.7
+    }
+  },
+  {
+    "id": "EXP-20261014-172507-B26802",
+    "timestamp": "2026-10-14T17:25:07.649038",
+    "readable_time": "2026-10-14 17:25:07",
+    "type": "TCP_CONGESTION_CONTROL",
+    "category": "SIMULATION",
+    "config": {
+      "mss": 1460,
+      "initial_cwnd": 1,
+      "initial_ssthresh": 16,
+      "total_rounds": 15,
+      "timeout_rounds": [
+        8
+      ],
+      "dup_ack_rounds": []
+    },
+    "metrics": {
+      "max_cwnd_mss": 18.0,
+      "final_cwnd_mss": 18.0,
+      "final_ssthresh_mss": 9.5,
+      "total_events": 1
+    },
+    "status": "SUCCESS",
+    "details": {
+      "events": [
+        {
+          "round": 8,
+          "event": "Timeout",
+          "description": "Round 8: Simulated Packet Loss / Retransmission Timeout! ssthresh reduced from 16.0 to 9.5 (half of cwnd=19.0). cwnd reset to 1 MSS (1460 bytes). Entering Slow Start.",
+          "severity": "high"
+        }
+      ]
+    }
+  },
+  {
+    "id": "EXP-20261014-172507-A5C01D",
+    "timestamp": "2026-10-14T17:25:07.626386",
+    "readable_time": "2026-10-14 17:25:07",
+    "type": "TCP_VS_UDP_COMPARISON",
+    "category": "REAL_NETWORK",
+    "config": {
+      "packet_count": 3,
+      "payload_size": 128,
+      "interval_ms": 2.0
+    },
+    "metrics": {
+      "sent_packets": 6,
+      "received_packets": 6,
+      "tcp_throughput_mbps": 0.4394,
+      "udp_throughput_mbps": 0.5321,
+      "tcp_avg_rtt_ms": 0.519,
+      "udp_avg_rtt_ms": 0.192
+    },
+    "status": "SUCCESS",
+    "details": {
+      "tcp_throughput": 0.4394,
+      "udp_throughput": 0.5321,
+      "tcp_avg_rtt": 0.519,
+      "udp_avg_rtt": 0.192,
+      "tcp_loss_pct": 0.0,
+      "udp_loss_pct": 0.0
+    }
+  },
+  {
+    "id": "EXP-20261012-150131-CED638",
+    "timestamp": "2026-10-12T15:01:31.217666",
+    "readable_time": "2026-10-12 15:01:31",
+    "type": "TCP_CONGESTION_CONTROL",
+    "category": "SIMULATION",
+    "config": {
+      "mss": 1460,
+      "initial_cwnd": 1,
+      "initial_ssthresh": 16,
+      "total_rounds": 25,
+      "timeout_rounds": [
+        12
+      ],
+      "dup_ack_rounds": [
+        20
+      ]
+    },
+    "metrics": {
+      "max_cwnd_mss": 22.0,
+      "final_cwnd_mss": 13.5,
+      "final_ssthresh_mss": 9.5,
+      "total_events": 2
+    },
+    "status": "SUCCESS",
+    "details": {
+      "events": [
+        {
+          "round": 12,
+          "event": "Timeout",
+          "description": "Round 12: Simulated Packet Loss / Retransmission Timeout! ssthresh reduced from 16.0 to 11.5 (half of cwnd=23.0). cwnd reset to 1 MSS (1460 bytes). Entering Slow Start.",
+          "severity": "high"
+        },
+        {
+          "round": 20,
+          "event": "3 Duplicate ACKs",
+          "description": "Round 20: 3 Duplicate ACKs received (Fast Retransmit & Recovery)! Packet loss detected early without timer expiration. ssthresh set to 9.5, cwnd set to 9.5 MSS. Resuming in Congestion Avoidance directly.",
+          "severity": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "EXP-20261012-150125-B8ED5C",
+    "timestamp": "2026-10-12T15:01:25.645090",
+    "readable_time": "2026-10-12 15:01:25",
+    "type": "TOKEN_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 10,
+      "token_rate": 3,
+      "queue_capacity": 10,
+      "allow_queueing": true,
+      "arrivals": [
+        4,
+        8,
+        2,
+        0,
+        10,
+        1,
+        5,
+        0
+      ]
+    },
+    "metrics": {
+      "sent_packets": 30,
+      "received_packets": 30,
+      "received_unique_packets": 30,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 30,
+      "total_transmitted": 30,
+      "total_dropped": 0,
+      "burst_events": 3,
+      "max_burst_size": 8,
+      "loss_percentage": 0.0,
+      "delivery_percentage": 100.0,
+      "avg_tokens_remaining": 1.9
+    }
+  },
+  {
+    "id": "EXP-20261012-150122-B1CB87",
+    "timestamp": "2026-10-12T15:01:22.691268",
+    "readable_time": "2026-10-12 15:01:22",
+    "type": "LEAKY_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 10,
+      "leak_rate": 3,
+      "arrivals": [
+        4,
+        8,
+        2,
+        0,
+        10,
+        1,
+        5,
+        0
+      ]
+    },
+    "metrics": {
+      "sent_packets": 30,
+      "received_packets": 28,
+      "received_unique_packets": 28,
+      "packet_loss_pct": 6.67,
+      "delivery_ratio_pct": 93.33
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 30,
+      "total_transmitted": 28,
+      "total_dropped": 2,
+      "max_queue_reached": 10,
+      "loss_percentage": 6.67,
+      "delivery_percentage": 93.33,
+      "avg_queue_utilization_pct": 38.0
+    }
+  },
+  {
+    "id": "EXP-20261012-150104-FEC748",
+    "timestamp": "2026-10-12T15:01:04.874957",
+    "readable_time": "2026-10-12 15:01:04",
+    "type": "TCP",
+    "category": "REAL_NETWORK",
+    "config": {
+      "host": "127.0.0.1",
+      "port": 5001,
+      "packet_count": 10,
+      "payload_size": 1024,
+      "interval_ms": 5.0,
+      "timeout_sec": 2.0
+    },
+    "metrics": {
+      "sent_packets": 10,
+      "received_packets": 10,
+      "received_unique_packets": 10,
+      "missing_seqs": [],
+      "duplicate_count": 0,
+      "payload_bytes_received": 10240,
+      "elapsed_seconds": 0.0553,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0,
+      "throughput_mbps": 1.4817,
+      "avg_rtt_ms": 0.42,
+      "min_rtt_ms": 0.21,
+      "max_rtt_ms": 1.542,
+      "jitter_ms": 0.41,
+      "sample_count": 10
+    },
+    "status": "SUCCESS",
+    "details": {
+      "packets_preview": [
+        {
+          "seq": 1,
+          "size_bytes": 1024,
+          "sent_time": 0.0006,
+          "ack_time": 0.0021,
+          "rtt_ms": 1.542,
+          "status": "ACKED"
+        },
+        {
+          "seq": 2,
+          "size_bytes": 1024,
+          "sent_time": 0.0075,
+          "ack_time": 0.0077,
+          "rtt_ms": 0.222,
+          "status": "ACKED"
+        },
+        {
+          "seq": 3,
+          "size_bytes": 1024,
+          "sent_time": 0.0133,
+          "ack_time": 0.0136,
+          "rtt_ms": 0.301,
+          "status": "ACKED"
+        },
+        {
+          "seq": 4,
+          "size_bytes": 1024,
+          "sent_time": 0.0189,
+          "ack_time": 0.0192,
+          "rtt_ms": 0.279,
+          "status": "ACKED"
+        },
+        {
+          "seq": 5,
+          "size_bytes": 1024,
+          "sent_time": 0.0247,
+          "ack_time": 0.025,
+          "rtt_ms": 0.299,
+          "status": "ACKED"
+        },
+        {
+          "seq": 6,
+          "size_bytes": 1024,
+          "sent_time": 0.0306,
+          "ack_time": 0.0308,
+          "rtt_ms": 0.234,
+          "status": "ACKED"
+        },
+        {
+          "seq": 7,
+          "size_bytes": 1024,
+          "sent_time": 0.0361,
+          "ack_time": 0.0364,
+          "rtt_ms": 0.286,
+          "status": "ACKED"
+        },
+        {
+          "seq": 8,
+          "size_bytes": 1024,
+          "sent_time": 0.0428,
+          "ack_time": 0.0434,
+          "rtt_ms": 0.596,
+          "status": "ACKED"
+        },
+        {
+          "seq": 9,
+          "size_bytes": 1024,
+          "sent_time": 0.049,
+          "ack_time": 0.0492,
+          "rtt_ms": 0.229,
+          "status": "ACKED"
+        },
+        {
+          "seq": 10,
+          "size_bytes": 1024,
+          "sent_time": 0.055,
+          "ack_time": 0.0553,
+          "rtt_ms": 0.21,
+          "status": "ACKED"
+        }
+      ],
+      "notes": "TCP provides reliable, ordered transmission via operating system acknowledgment and flow control. All packets delivered are confirmed by the application-level server ACK."
+    }
+  },
+  {
+    "id": "EXP-20261012-144839-656B9C",
+    "timestamp": "2026-10-12T14:48:39.948027",
+    "readable_time": "2026-10-12 14:48:39",
+    "type": "TCP_CONGESTION_CONTROL",
+    "category": "SIMULATION",
+    "config": {
+      "mss": 1460,
+      "initial_cwnd": 1,
+      "initial_ssthresh": 16,
+      "total_rounds": 25,
+      "timeout_rounds": [
+        12
+      ],
+      "dup_ack_rounds": [
+        20
+      ]
+    },
+    "metrics": {
+      "max_cwnd_mss": 22.0,
+      "final_cwnd_mss": 13.5,
+      "final_ssthresh_mss": 9.5,
+      "total_events": 2
+    },
+    "status": "SUCCESS",
+    "details": {
+      "events": [
+        {
+          "round": 12,
+          "event": "Timeout",
+          "description": "Round 12: Simulated Packet Loss / Retransmission Timeout! ssthresh reduced from 16.0 to 11.5 (half of cwnd=23.0). cwnd reset to 1 MSS (1460 bytes). Entering Slow Start.",
+          "severity": "high"
+        },
+        {
+          "round": 20,
+          "event": "3 Duplicate ACKs",
+          "description": "Round 20: 3 Duplicate ACKs received (Fast Retransmit & Recovery)! Packet loss detected early without timer expiration. ssthresh set to 9.5, cwnd set to 9.5 MSS. Resuming in Congestion Avoidance directly.",
+          "severity": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "EXP-20261012-144714-23F8EC",
+    "timestamp": "2026-10-12T14:47:14.720163",
+    "readable_time": "2026-10-12 14:47:14",
+    "type": "TOKEN_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 10,
+      "token_rate": 3,
+      "queue_capacity": 10,
+      "allow_queueing": true,
+      "arrivals": [
+        4,
+        8,
+        2,
+        0,
+        10,
+        1,
+        5,
+        0
+      ]
+    },
+    "metrics": {
+      "sent_packets": 30,
+      "received_packets": 30,
+      "received_unique_packets": 30,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 30,
+      "total_transmitted": 30,
+      "total_dropped": 0,
+      "burst_events": 3,
+      "max_burst_size": 8,
+      "loss_percentage": 0.0,
+      "delivery_percentage": 100.0,
+      "avg_tokens_remaining": 1.9
+    }
+  },
+  {
+    "id": "EXP-20261012-144613-C8D217",
+    "timestamp": "2026-10-12T14:46:13.572976",
+    "readable_time": "2026-10-12 14:46:13",
+    "type": "LEAKY_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 10,
+      "leak_rate": 3,
+      "arrivals": [
+        4,
+        8,
+        2,
+        0,
+        10,
+        1,
+        5,
+        0
+      ]
+    },
+    "metrics": {
+      "sent_packets": 30,
+      "received_packets": 28,
+      "received_unique_packets": 28,
+      "packet_loss_pct": 6.67,
+      "delivery_ratio_pct": 93.33
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 30,
+      "total_transmitted": 28,
+      "total_dropped": 2,
+      "max_queue_reached": 10,
+      "loss_percentage": 6.67,
+      "delivery_percentage": 93.33,
+      "avg_queue_utilization_pct": 38.0
+    }
+  },
+  {
+    "id": "EXP-20261012-144523-44125A",
+    "timestamp": "2026-10-12T14:45:23.871736",
+    "readable_time": "2026-10-12 14:45:23",
+    "type": "TCP_VS_UDP_COMPARISON",
+    "category": "REAL_NETWORK",
+    "config": {
+      "packet_count": 20,
+      "payload_size": 1024,
+      "interval_ms": 2.0
+    },
+    "metrics": {
+      "sent_packets": 40,
+      "received_packets": 40,
+      "tcp_throughput_mbps": 2.5352,
+      "udp_throughput_mbps": 2.8031,
+      "tcp_avg_rtt_ms": 0.492,
+      "udp_avg_rtt_ms": 0.38
+    },
+    "status": "SUCCESS",
+    "details": {
+      "tcp_throughput": 2.5352,
+      "udp_throughput": 2.8031,
+      "tcp_avg_rtt": 0.492,
+      "udp_avg_rtt": 0.38,
+      "tcp_loss_pct": 0.0,
+      "udp_loss_pct": 0.0
+    }
+  },
+  {
+    "id": "EXP-20261012-144447-8541DC",
+    "timestamp": "2026-10-12T14:44:47.033586",
+    "readable_time": "2026-10-12 14:44:47",
+    "type": "UDP",
+    "category": "REAL_NETWORK",
+    "config": {
+      "host": "127.0.0.1",
+      "port": 5002,
+      "packet_count": 10,
+      "payload_size": 1024,
+      "interval_ms": 5.0,
+      "timeout_sec": 0.5
+    },
+    "metrics": {
+      "sent_packets": 10,
+      "received_packets": 10,
+      "received_unique_packets": 10,
+      "missing_seqs": [],
+      "duplicate_count": 0,
+      "payload_bytes_received": 10240,
+      "elapsed_seconds": 0.0668,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0,
+      "throughput_mbps": 1.2257,
+      "avg_rtt_ms": 0.547,
+      "min_rtt_ms": 0.232,
+      "max_rtt_ms": 1.273,
+      "jitter_ms": 0.381,
+      "sample_count": 10
+    },
+    "status": "SUCCESS",
+    "details": {
+      "packets_preview": [
+        {
+          "seq": 1,
+          "size_bytes": 1024,
+          "sent_time": 0.0001,
+          "ack_time": 0.0005,
+          "rtt_ms": 0.494,
+          "status": "ACKED"
+        },
+        {
+          "seq": 2,
+          "size_bytes": 1024,
+          "sent_time": 0.0138,
+          "ack_time": 0.014,
+          "rtt_ms": 0.284,
+          "status": "ACKED"
+        },
+        {
+          "seq": 3,
+          "size_bytes": 1024,
+          "sent_time": 0.0208,
+          "ack_time": 0.0221,
+          "rtt_ms": 1.273,
+          "status": "ACKED"
+        },
+        {
+          "seq": 4,
+          "size_bytes": 1024,
+          "sent_time": 0.0277,
+          "ack_time": 0.0282,
+          "rtt_ms": 0.571,
+          "status": "ACKED"
+        },
+        {
+          "seq": 5,
+          "size_bytes": 1024,
+          "sent_time": 0.0343,
+          "ack_time": 0.0346,
+          "rtt_ms": 0.31,
+          "status": "ACKED"
+        },
+        {
+          "seq": 6,
+          "size_bytes": 1024,
+          "sent_time": 0.0405,
+          "ack_time": 0.0409,
+          "rtt_ms": 0.333,
+          "status": "ACKED"
+        },
+        {
+          "seq": 7,
+          "size_bytes": 1024,
+          "sent_time": 0.0462,
+          "ack_time": 0.0464,
+          "rtt_ms": 0.232,
+          "status": "ACKED"
+        },
+        {
+          "seq": 8,
+          "size_bytes": 1024,
+          "sent_time": 0.0536,
+          "ack_time": 0.0549,
+          "rtt_ms": 1.209,
+          "status": "ACKED"
+        },
+        {
+          "seq": 9,
+          "size_bytes": 1024,
+          "sent_time": 0.0606,
+          "ack_time": 0.0611,
+          "rtt_ms": 0.452,
+          "status": "ACKED"
+        },
+        {
+          "seq": 10,
+          "size_bytes": 1024,
+          "sent_time": 0.0665,
+          "ack_time": 0.0668,
+          "rtt_ms": 0.309,
+          "status": "ACKED"
+        }
+      ],
+      "notes": "UDP is a connectionless, best-effort transport protocol. It does not perform automatic retransmission or handshaking. Missing packets timed out waiting for server ACK."
+    }
+  },
+  {
+    "id": "EXP-20261012-144417-F60258",
+    "timestamp": "2026-10-12T14:44:17.792900",
+    "readable_time": "2026-10-12 14:44:17",
+    "type": "TCP",
+    "category": "REAL_NETWORK",
+    "config": {
+      "host": "127.0.0.1",
+      "port": 5001,
+      "packet_count": 10,
+      "payload_size": 1024,
+      "interval_ms": 5.0,
+      "timeout_sec": 2.0
+    },
+    "metrics": {
+      "sent_packets": 10,
+      "received_packets": 10,
+      "received_unique_packets": 10,
+      "missing_seqs": [],
+      "duplicate_count": 0,
+      "payload_bytes_received": 10240,
+      "elapsed_seconds": 0.0779,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0,
+      "throughput_mbps": 1.0512,
+      "avg_rtt_ms": 2.418,
+      "min_rtt_ms": 0.228,
+      "max_rtt_ms": 19.016,
+      "jitter_ms": 5.876,
+      "sample_count": 10
+    },
+    "status": "SUCCESS",
+    "details": {
+      "packets_preview": [
+        {
+          "seq": 1,
+          "size_bytes": 1024,
+          "sent_time": 0.0026,
+          "ack_time": 0.0217,
+          "rtt_ms": 19.016,
+          "status": "ACKED"
+        },
+        {
+          "seq": 2,
+          "size_bytes": 1024,
+          "sent_time": 0.0273,
+          "ack_time": 0.0275,
+          "rtt_ms": 0.265,
+          "status": "ACKED"
+        },
+        {
+          "seq": 3,
+          "size_bytes": 1024,
+          "sent_time": 0.0328,
+          "ack_time": 0.033,
+          "rtt_ms": 0.228,
+          "status": "ACKED"
+        },
+        {
+          "seq": 4,
+          "size_bytes": 1024,
+          "sent_time": 0.0398,
+          "ack_time": 0.0401,
+          "rtt_ms": 0.308,
+          "status": "ACKED"
+        },
+        {
+          "seq": 5,
+          "size_bytes": 1024,
+          "sent_time": 0.0457,
+          "ack_time": 0.0461,
+          "rtt_ms": 0.386,
+          "status": "ACKED"
+        },
+        {
+          "seq": 6,
+          "size_bytes": 1024,
+          "sent_time": 0.0517,
+          "ack_time": 0.0521,
+          "rtt_ms": 0.428,
+          "status": "ACKED"
+        },
+        {
+          "seq": 7,
+          "size_bytes": 1024,
+          "sent_time": 0.0573,
+          "ack_time": 0.0577,
+          "rtt_ms": 0.427,
+          "status": "ACKED"
+        },
+        {
+          "seq": 8,
+          "size_bytes": 1024,
+          "sent_time": 0.0629,
+          "ack_time": 0.0632,
+          "rtt_ms": 0.24,
+          "status": "ACKED"
+        },
+        {
+          "seq": 9,
+          "size_bytes": 1024,
+          "sent_time": 0.0687,
+          "ack_time": 0.0713,
+          "rtt_ms": 2.598,
+          "status": "ACKED"
+        },
+        {
+          "seq": 10,
+          "size_bytes": 1024,
+          "sent_time": 0.0776,
+          "ack_time": 0.0779,
+          "rtt_ms": 0.287,
+          "status": "ACKED"
+        }
+      ],
+      "notes": "TCP provides reliable, ordered transmission via operating system acknowledgment and flow control. All packets delivered are confirmed by the application-level server ACK."
+    }
+  },
+  {
+    "id": "EXP-20261012-143238-BC4E38",
+    "timestamp": "2026-10-12T14:32:38.133674",
+    "readable_time": "2026-10-12 14:32:38",
+    "type": "TOKEN_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 10,
+      "token_rate": 3,
+      "queue_capacity": 5,
+      "allow_queueing": true,
+      "arrivals": [
+        5,
+        2,
+        8
+      ]
+    },
+    "metrics": {
+      "sent_packets": 15,
+      "received_packets": 12,
+      "received_unique_packets": 12,
+      "packet_loss_pct": 20.0,
+      "delivery_ratio_pct": 80.0
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 15,
+      "total_transmitted": 12,
+      "total_dropped": 3,
+      "burst_events": 2,
+      "max_burst_size": 5,
+      "loss_percentage": 20.0,
+      "delivery_percentage": 80.0,
+      "avg_tokens_remaining": 5.0
+    }
+  },
+  {
+    "id": "EXP-20261012-143238-4C1B89",
+    "timestamp": "2026-10-12T14:32:38.116611",
+    "readable_time": "2026-10-12 14:32:38",
+    "type": "UDP",
+    "category": "REAL_NETWORK",
+    "config": {
+      "host": "127.0.0.1",
+      "port": 5002,
+      "packet_count": 3,
+      "payload_size": 128,
+      "interval_ms": 2.0,
+      "timeout_sec": 1.0
+    },
+    "metrics": {
+      "sent_packets": 3,
+      "received_packets": 3,
+      "received_unique_packets": 3,
+      "missing_seqs": [],
+      "duplicate_count": 0,
+      "payload_bytes_received": 384,
+      "elapsed_seconds": 0.0065,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0,
+      "throughput_mbps": 0.4732,
+      "avg_rtt_ms": 0.392,
+      "min_rtt_ms": 0.29,
+      "max_rtt_ms": 0.476,
+      "jitter_ms": 0.094,
+      "sample_count": 3
+    },
+    "status": "SUCCESS",
+    "details": {
+      "packets_preview": [
+        {
+          "seq": 1,
+          "size_bytes": 128,
+          "sent_time": 0.0,
+          "ack_time": 0.0005,
+          "rtt_ms": 0.476,
+          "status": "ACKED"
+        },
+        {
+          "seq": 2,
+          "size_bytes": 128,
+          "sent_time": 0.0031,
+          "ack_time": 0.0033,
+          "rtt_ms": 0.29,
+          "status": "ACKED"
+        },
+        {
+          "seq": 3,
+          "size_bytes": 128,
+          "sent_time": 0.006,
+          "ack_time": 0.0065,
+          "rtt_ms": 0.409,
+          "status": "ACKED"
+        }
+      ],
+      "notes": "UDP is a connectionless, best-effort transport protocol. It does not perform automatic retransmission or handshaking. Missing packets timed out waiting for server ACK."
+    }
+  },
+  {
+    "id": "EXP-20261012-143238-2AB74C",
+    "timestamp": "2026-10-12T14:32:38.090164",
+    "readable_time": "2026-10-12 14:32:38",
+    "type": "TCP",
+    "category": "REAL_NETWORK",
+    "config": {
+      "host": "127.0.0.1",
+      "port": 5001,
+      "packet_count": 3,
+      "payload_size": 128,
+      "interval_ms": 2.0,
+      "timeout_sec": 2.0
+    },
+    "metrics": {
+      "sent_packets": 3,
+      "received_packets": 3,
+      "received_unique_packets": 3,
+      "missing_seqs": [],
+      "duplicate_count": 0,
+      "payload_bytes_received": 384,
+      "elapsed_seconds": 0.0087,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0,
+      "throughput_mbps": 0.3527,
+      "avg_rtt_ms": 1.074,
+      "min_rtt_ms": 0.242,
+      "max_rtt_ms": 2.722,
+      "jitter_ms": 1.427,
+      "sample_count": 3
+    },
+    "status": "SUCCESS",
+    "details": {
+      "packets_preview": [
+        {
+          "seq": 1,
+          "size_bytes": 128,
+          "sent_time": 0.0004,
+          "ack_time": 0.0031,
+          "rtt_ms": 2.722,
+          "status": "ACKED"
+        },
+        {
+          "seq": 2,
+          "size_bytes": 128,
+          "sent_time": 0.0056,
+          "ack_time": 0.0059,
+          "rtt_ms": 0.242,
+          "status": "ACKED"
+        },
+        {
+          "seq": 3,
+          "size_bytes": 128,
+          "sent_time": 0.0084,
+          "ack_time": 0.0087,
+          "rtt_ms": 0.258,
+          "status": "ACKED"
+        }
+      ],
+      "notes": "TCP provides reliable, ordered transmission via operating system acknowledgment and flow control. All packets delivered are confirmed by the application-level server ACK."
+    }
+  },
+  {
+    "id": "EXP-20261012-143238-F8A8CC",
+    "timestamp": "2026-10-12T14:32:38.058653",
+    "readable_time": "2026-10-12 14:32:38",
+    "type": "LEAKY_BUCKET",
+    "category": "SIMULATION",
+    "config": {
+      "bucket_capacity": 8,
+      "leak_rate": 2,
+      "arrivals": [
+        4,
+        6,
+        2
+      ]
+    },
+    "metrics": {
+      "sent_packets": 12,
+      "received_packets": 12,
+      "received_unique_packets": 12,
+      "packet_loss_pct": 0.0,
+      "delivery_ratio_pct": 100.0
+    },
+    "status": "SUCCESS",
+    "details": {
+      "total_incoming": 12,
+      "total_transmitted": 12,
+      "total_dropped": 0,
+      "max_queue_reached": 8,
+      "loss_percentage": 0.0,
+      "delivery_percentage": 100.0,
+      "avg_queue_utilization_pct": 41.7
+    }
+  },
+  {
+    "id": "EXP-20261012-143238-4C1024",
+    "timestamp": "2026-10-12T14:32:38.032967",
+    "readable_time": "2026-10-12 14:32:38",
+    "type": "TCP_CONGESTION_CONTROL",
+    "category": "SIMULATION",
+    "config": {
+      "mss": 1460,
+      "initial_cwnd": 1,
+      "initial_ssthresh": 16,
+      "total_rounds": 15,
+      "timeout_rounds": [
+        8
+      ],
+      "dup_ack_rounds": []
+    },
+    "metrics": {
+      "max_cwnd_mss": 18.0,
+      "final_cwnd_mss": 18.0,
+      "final_ssthresh_mss": 9.5,
+      "total_events": 1
+    },
+    "status": "SUCCESS",
+    "details": {
+      "events": [
+        {
+          "round": 8,
+          "event": "Timeout",
+          "description": "Round 8: Simulated Packet Loss / Retransmission Timeout! ssthresh reduced from 16.0 to 9.5 (half of cwnd=19.0). cwnd reset to 1 MSS (1460 bytes). Entering Slow Start.",
+          "severity": "high"
+        }
+      ]
+    }
+  },
+  {
+    "id": "EXP-20261012-143238-1A2EB8",
+    "timestamp": "2026-10-12T14:32:38.017767",
+    "readable_time": "2026-10-12 14:32:38",
+    "type": "TCP_VS_UDP_COMPARISON",
+    "category": "REAL_NETWORK",
+    "config": {
+      "packet_count": 3,
+      "payload_size": 128,
+      "interval_ms": 2.0
+    },
+    "metrics": {
+      "sent_packets": 6,
+      "received_packets": 6,
+      "tcp_throughput_mbps": 0.487,
+      "udp_throughput_mbps": 0.5112,
+      "tcp_avg_rtt_ms": 0.261,
+      "udp_avg_rtt_ms": 0.351
+    },
+    "status": "SUCCESS",
+    "details": {
+      "tcp_throughput": 0.487,
+      "udp_throughput": 0.5112,
+      "tcp_avg_rtt": 0.261,
+      "udp_avg_rtt": 0.351,
+      "tcp_loss_pct": 0.0,
+      "udp_loss_pct": 0.0
+    }
+  }
+]
