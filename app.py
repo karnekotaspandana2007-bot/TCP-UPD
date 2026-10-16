@@ -498,5 +498,7 @@ if __name__ == "__main__":
             sys.stdout.reconfigure(encoding="utf-8")
         except Exception:
             pass
-    print("[STARTING] Starting TCP/UDP Performance Analyzer on http://127.0.0.1:5000 ...")
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    host = "0.0.0.0"
+    port = int(os.environ.get("PORT", 5000))
+    print(f"[STARTING] Starting TCP/UDP Performance Analyzer on http://{host}:{port} ...")
+    app.run(host=host, port=port, debug=False)
